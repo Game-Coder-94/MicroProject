@@ -3,7 +3,7 @@ function calculateGrades(students) {
     const subjectsStats = {};
 
     subjects.forEach(subject => {
-        const scores = subjects.map(s => s.scores[subject]);
+        const scores = students.map(s => s.scores[subject]);
 
         // Calculate mean & stdDev of students for each subject
         subjectsStats[subject] = {
