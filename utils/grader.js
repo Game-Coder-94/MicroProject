@@ -1,3 +1,5 @@
+const ss = require('simple-statistics');
+
 function calculateGrades(students) {
     const subjects = Object.keys(students[0].scores);    // ['Math', 'English'] (Gets total subjects)
     const subjectsStats = {};
@@ -7,8 +9,8 @@ function calculateGrades(students) {
 
         // Calculate mean & stdDev of students for each subject
         subjectsStats[subject] = {
-            mean: getMean(scores),
-            stdDev: getStdDev(scores)
+            mean: ss.mean(scores),
+            stdDev: ss.standardDeviation(scores)
         };
     });
 
@@ -19,7 +21,7 @@ function calculateGrades(students) {
             const rawScores = student.scores[subject];
             const stats = subjectsStats[subject];
 
-            const z = (rawScores - stats.mean) / stats.stdDev;
+            const z = stats.stdDev === 0 ? 0 : (rawScores - stats.mean) / stats.stdDev;
             totalZ += z;
         })
 
@@ -40,3 +42,5 @@ function assignGrade(zScore) {
     if (zScore >= -1.5) return 'D';
     return 'F';
 }
+
+module.exports = { calculateGrades };

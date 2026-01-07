@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Game-Coder-94/MicroProject#readme",
   "dependencies": {
     "body-parser": "^2.2.1",
+    "cors": "^2.8.5",
     "ejs": "^3.1.10",
     "express": "^5.2.1",
     "multer": "^2.0.2",

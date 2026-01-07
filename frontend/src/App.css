@@ -1,0 +1,59 @@
+.container {
+  max-width: 800px;
+  margin: 2rem auto;
+  font-family: Arial, sans-serif;
+  padding: 0 1rem;
+}
+
+.card {
+  background: #f8f9fa;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+}
+
+button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #007bff;
+  color: white;
+}
+
+.error {
+  color: #dc3545;
+  margin-top: 10px;
+}
+
+/* Grade Colors */
+.grade-badge { padding: 4px 8px; border-radius: 12px; font-weight: bold; font-size: 0.9em; }
+.grade-A { background: #d4edda; color: #155724; }
+.grade-B { background: #cce5ff; color: #004085; }
+.grade-C { background: #fff3cd; color: #856404; }
+.grade-D { background: #ffeeba; color: #856404; }
+.grade-F { background: #f8d7da; color: #721c24; }

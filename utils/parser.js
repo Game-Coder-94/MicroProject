@@ -26,3 +26,5 @@ function parseCSV(csvText) {
 
     return students;
 }
+
+module.exports = { parseCSV };
