@@ -16,13 +16,15 @@ function App() {
   // 2. Handle Upload to Backend
   const handleUpload = async (e) => {
     e.preventDefault();
+    
+    // Prevent no file selection
     if (!file) {
       setError("Please select a file first.");
       return;
     }
 
     const formData = new FormData();
-    formData.append('csvFile', file); // Must match backend upload.single('csvFile')
+    formData.append('csvFile', file);
 
     try {
       const response = await fetch('http://localhost:8000/calculate', {
@@ -44,7 +46,7 @@ function App() {
 
   return (
     <div className="container">
-      <h1>Student Grade Calculator</h1>
+      <h1>Relative Grading Calculator</h1>
 
       {/* Input Section */}
       <div className="card">

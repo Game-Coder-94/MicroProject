@@ -1,5 +1,7 @@
+// Import libs
 const ss = require('simple-statistics');
 
+// Function for calculating grades using Z-score method
 function calculateGrades(students) {
     const subjects = Object.keys(students[0].scores);    // ['Math', 'English'] (Gets total subjects)
     const subjectsStats = {};
@@ -16,7 +18,8 @@ function calculateGrades(students) {
 
     return students.map(student => {
         let totalZ = 0;
-
+        
+        // Calculate Z-score for each subject
         subjects.forEach(subject => {
             const rawScores = student.scores[subject];
             const stats = subjectsStats[subject];
@@ -25,8 +28,9 @@ function calculateGrades(students) {
             totalZ += z;
         })
 
-        const avgZ = totalZ / subjects.length;
+        const avgZ = totalZ / subjects.length;  // take avg of each subject
 
+        // Return a obj [Name, Z-score, Grade]
         return {
             name: student.name,
             finalZ: avgZ.toFixed(2),
@@ -35,6 +39,7 @@ function calculateGrades(students) {
     });
 }
 
+// Function to assign grade based on Z-score
 function assignGrade(zScore) {
     if (zScore >= 1.5) return 'A';
     if (zScore >= 0.5) return 'B';
@@ -43,4 +48,5 @@ function assignGrade(zScore) {
     return 'F';
 }
 
+// Export calculateGrades as obj
 module.exports = { calculateGrades };
