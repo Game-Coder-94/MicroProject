@@ -1,23 +1,19 @@
 import React, { useState } from 'react';
-import './App.css'; // We'll add simple styles below
+import './App.css';
 
 function App() {
   const [file, setFile] = useState(null);
   const [results, setResults] = useState([]);
   const [error, setError] = useState('');
 
-  // 1. Handle File Selection
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
     setError('');
     setResults([]);
   };
 
-  // 2. Handle Upload to Backend
   const handleUpload = async (e) => {
     e.preventDefault();
-    
-    // Prevent no file selection
     if (!file) {
       setError("Please select a file first.");
       return;
@@ -31,7 +27,6 @@ function App() {
         method: 'POST',
         body: formData,
       });
-
       const data = await response.json();
 
       if (data.success) {
@@ -44,11 +39,17 @@ function App() {
     }
   };
 
+  const getSubjects = () => {
+    if (results.length === 0) return [];
+    return Object.keys(results[0].subjectGrades);
+  };
+
+  const subjects = getSubjects();
+
   return (
     <div className="container">
-      <h1><b>Relative Grading Calculator:</b></h1>
+      <h1>Student Subject Grader</h1>
 
-      {/* Input Section */}
       <div className="card">
         <form onSubmit={handleUpload}>
           <input type="file" accept=".csv" onChange={handleFileChange} />
@@ -57,28 +58,42 @@ function App() {
         {error && <p className="error">{error}</p>}
       </div>
 
-      {/* Results Table */}
       {results.length > 0 && (
         <div className="results-area">
-          <h2>Results</h2>
+          <h2>Detailed Subject Report</h2>
           <table>
             <thead>
               <tr>
+                {/* 1. Name */}
                 <th>Student Name</th>
-                <th>Avg Z-Score</th>
-                <th>Final Grade</th>
+
+                {/* 2. New Column: Avg Z-Score */}
+                <th style={{ backgroundColor: '#6c757d' }}>Avg Z-Score</th>
+                
+                {/* 3. Dynamic Subject Columns */}
+                {subjects.map((subject) => (
+                  <th key={subject}>{subject}</th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {results.map((student, index) => (
                 <tr key={index}>
-                  <td>{student.name}</td>
-                  <td>{student.finalZ}</td>
-                  <td>
-                    <span className={`grade-badge grade-${student.finalGrade}`}>
-                      {student.finalGrade}
-                    </span>
+                  <td style={{ fontWeight: 'bold' }}>{student.name}</td>
+
+                  {/* Display the Avg Z-Score */}
+                  <td style={{ fontWeight: 'bold', color: '#555' }}>
+                    {student.avgZScore}
                   </td>
+                  
+                  {/* Display Grades for each subject */}
+                  {subjects.map((subject) => (
+                    <td key={subject}>
+                      <span className={`grade-badge grade-${student.subjectGrades[subject]}`}>
+                        {student.subjectGrades[subject]}
+                      </span>
+                    </td>
+                  ))}
                 </tr>
               ))}
             </tbody>
