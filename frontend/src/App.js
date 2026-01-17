@@ -46,7 +46,7 @@ function App() {
 
   return (
     <div className="container">
-      <h1>Relative Grading Calculator</h1>
+      <h1><b>Relative Grading Calculator:</b></h1>
 
       {/* Input Section */}
       <div className="card">

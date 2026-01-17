@@ -1,8 +1,11 @@
 .container {
   max-width: 800px;
   margin: 2rem auto;
-  font-family: Arial, sans-serif;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   padding: 0 1rem;
+  text-align: center;
+  color: #030415;
+ 
 }
 
 .card {
@@ -24,7 +27,7 @@ button {
 }
 
 button:disabled {
-  background: #ccc;
+  background: hsla(0, 94%, 27%, 0.166);
   cursor: not-allowed;
 }
 
