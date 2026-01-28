@@ -23,7 +23,7 @@ function Grading() {
     formData.append('csvFile', file);
 
     try {
-      const response = await fetch('http://localhost:8000/calculate', {
+      const response = await fetch('http://localhost:8000/grades', {
         method: 'POST',
         body: formData,
       });
@@ -37,6 +37,12 @@ function Grading() {
     } catch (err) {
       setError("Failed to connect to server");
     }
+  };
+
+  const getGradeClass = (grade) => {
+    // Map symbols to text safe for CSS
+    if (grade === 'A+') return 'grade-A-plus';
+    return `grade-${grade}`; // Falls back to grade-A, grade-B, etc.
   };
 
   const getSubjects = () => {
@@ -89,7 +95,7 @@ function Grading() {
                   {/* Display Grades for each subject */}
                   {subjects.map((subject) => (
                     <td key={subject}>
-                      <span className={`grade-badge grade-${student.subjectGrades[subject]}`}>
+                      <span className={`grade-badge ${getGradeClass(student.subjectGrades[subject])}`}>
                         {student.subjectGrades[subject]}
                       </span>
                     </td>
