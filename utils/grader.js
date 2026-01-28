@@ -1,52 +1,56 @@
-// Import libs
 const ss = require('simple-statistics');
 
-// Function for calculating grades using Z-score method
 function calculateGrades(students) {
-    const subjects = Object.keys(students[0].scores);    // ['Math', 'English'] (Gets total subjects)
+    if (!students || !students.length) return [];
+
+    const subjects = Object.keys(students[0].scores);
     const subjectsStats = {};
 
+    // 1. Calculate Mean & StdDev for each subject
     subjects.forEach(subject => {
         const scores = students.map(s => s.scores[subject]);
-
-        // Calculate mean & stdDev of students for each subject
         subjectsStats[subject] = {
             mean: ss.mean(scores),
             stdDev: ss.standardDeviation(scores)
         };
     });
 
+    // 2. Assign Grade PER SUBJECT & Calculate Avg Z
     return students.map(student => {
-        let totalZ = 0;
-        
-        // Calculate Z-score for each subject
+        const subjectGrades = {}; 
+        let totalZ = 0; // Accumulator for average
+
         subjects.forEach(subject => {
-            const rawScores = student.scores[subject];
+            const rawScore = student.scores[subject];
             const stats = subjectsStats[subject];
 
-            const z = stats.stdDev === 0 ? 0 : (rawScores - stats.mean) / stats.stdDev;
+            // Calculate Z-Score
+            const z = stats.stdDev === 0 ? 0 : (rawScore - stats.mean) / stats.stdDev;
+            
+            // Add to total
             totalZ += z;
-        })
 
-        const avgZ = totalZ / subjects.length;  // take avg of each subject
+            // Assign individual subject grade
+            subjectGrades[subject] = assignGrade(z);
+        });
 
-        // Return a obj [Name, Z-score, Grade]
+        // Calculate Average Z-Score across all subjects
+        const avgZ = totalZ / subjects.length;
+
         return {
             name: student.name,
-            finalZ: avgZ.toFixed(2),
-            finalGrade: assignGrade(avgZ)
+            subjectGrades: subjectGrades,
+            avgZScore: avgZ.toFixed(2) // Round to 2 decimals
         };
     });
 }
 
-// Function to assign grade based on Z-score
-function assignGrade(zScore) {
-    if (zScore >= 1.5) return 'A';
-    if (zScore >= 0.5) return 'B';
-    if (zScore >= -0.5) return 'C';
-    if (zScore >= -1.5) return 'D';
+function assignGrade(z) {
+    if (z >= 1.5) return 'A';
+    if (z >= 0.5) return 'B';
+    if (z >= -0.5) return 'C';
+    if (z >= -1.5) return 'D';
     return 'F';
 }
 
-// Export calculateGrades as obj
 module.exports = { calculateGrades };
