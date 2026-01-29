@@ -9,13 +9,17 @@ function getGradeDetails(z) {
 }
 
 function calculateResults (courses, sigp = 0) {
-    const sumCiPi = 0;
-    const sumCi = 0;
+    let sumCiPi = 0;
+    let sumCi = 0;
 
     const reportCard = courses.map(course => {
         const Ci = parseFloat(course.Credit);
         const z = parseFloat(course.zScore);
 
+        if (isNaN(Ci) || isNaN(z)) {
+            throw new Error(`Invalid data for subject: ${course.Subject}`);
+        }
+        
         const grade = getGradeDetails(z);
         const Pi = grade.point;
 
@@ -27,7 +31,7 @@ function calculateResults (courses, sigp = 0) {
             credits: Ci,
             z_score_obtained: z,
             grade_point: Pi,
-            grade_letter: letter
+            grade_letter: grade.letter
         };
     });
 
@@ -40,7 +44,7 @@ function calculateResults (courses, sigp = 0) {
 
     return {
         summary: {
-            sgpa: finalSGPA,
+            sgpa: finalSGPA.toFixed(2),
             total_credits: sumCi,
             sigp_added: sigp
         },

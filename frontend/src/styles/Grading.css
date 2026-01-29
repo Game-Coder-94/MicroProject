@@ -16,6 +16,22 @@
   margin-bottom: 2rem;
 }
 
+.input-flex {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.input-row {
+  flex-direction: row;
+}
+
+.input-row label {
+  margin-right: 20px;
+}
+
 button {
   background: #007bff;
   color: white;

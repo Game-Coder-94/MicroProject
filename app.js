@@ -35,13 +35,15 @@ app.post('/grades', upload.single('csvFile'), (req, res) => {
         }
 
         // 1. Get data in csv format
-        const csvText = fs.readFileSync(req.file.path, 'utf8');
+        const csvMarksText = fs.readFileSync(req.file.path, 'utf8');
+        const csvCreditsText = fs.readFileSync(req.file.path, 'utf8');
+        const sigp = req.body.sigp ? parseFloat(req.body.sigp) : 0;
 
         // 2. Convert data
-        const studentsData = parseCSV(csvText);
+        const studentsData = parseCSV(csvMarksText);
 
         // 3. Process data
-        const results = calculateGrades(studentsData, sigp);
+        const results = calculateGrades(studentsData);
 
         // 4. Cleanup
         fs.unlinkSync(req.file.path);
@@ -51,6 +53,7 @@ app.post('/grades', upload.single('csvFile'), (req, res) => {
 
     } catch (err) {
         console.error(err);
+        if (req.file) fs.unlinkSync(req.file.path);
         res.status(500).json({ success: false, error: err.message });
     }
 });
@@ -67,11 +70,11 @@ app.post('/grades', upload.single('csvFile'), (req, res) => {
 //         const sigp = req.body.sigp ? parseFloat(req.body.sigp) : 0.0;
 
 //         // 2. Read the CSV file
-//         const csvText = fs.readFileSync(req.file.path, 'utf8');
+//         const csvMarksText = fs.readFileSync(req.file.path, 'utf8');
 
 //         // 3. Parse CSV into an array of objects
 //         // Expected CSV format: Subject, Credit, GradePoint
-//         const semesterData = parseCSV(csvText);
+//         const semesterData = parseCSV(csvMarksText);
 
 //         // 4. Calculate SGPA using the formula
 //         const results = calculateSGPA(semesterData, sigp);

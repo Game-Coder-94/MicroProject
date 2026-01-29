@@ -2,25 +2,33 @@ import React, { useState } from 'react';
 import '../styles/Grading.css';
 
 function Grading() {
-  const [file, setFile] = useState(null);
+  const [scoresFile, setScoresFile] = useState(null);
+  const [creditsFile, setCreditsFile] = useState(null);
   const [results, setResults] = useState([]);
+  const [sigpState, setSigpState] = useState('');
   const [error, setError] = useState('');
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    setScoresFile(e.target.files[0]);
     setError('');
     setResults([]);
   };
 
   const handleUpload = async (e) => {
     e.preventDefault();
-    if (!file) {
-      setError("Please select a file first.");
+    if (!scoresFile) {
+      setError("Please select a Scores file first.");
+      return;
+    }
+    if (!creditsFile) {
+      setError("Please select a Credits file first.");
       return;
     }
 
     const formData = new FormData();
-    formData.append('csvFile', file);
+    formData.append('csvFile', scoresFile);
+    formData.append('creditsFile', creditsFile);
+    formData.append('sigp', sigpState);
 
     try {
       const response = await fetch('http://localhost:8000/grades', {
@@ -58,8 +66,20 @@ function Grading() {
 
       <div className="card">
         <form onSubmit={handleUpload}>
-          <input type="file" accept=".csv" onChange={handleFileChange} />
-          <button type="submit" disabled={!file}>Calculate Grades</button>
+          <div className='input-flex'>
+            <div className='input-row'>
+              <label>Scores File:</label>
+              <input type="file" accept=".csv" onChange={handleFileChange} />
+              <label>Credits File:</label>
+              <input type="file" accept=".csv" onChange={handleFileChange} />
+              <button type="submit" disabled={!scoresFile}>Calculate Grades</button>
+            </div>
+            
+              <div className='input-row'>
+                <label>Optional SIGP:</label>
+                <input type="text" placeholder="SIGP (optional)" value={sigpState} onChange={(e) => setSigpState(e.target.value)} />
+              </div>
+          </div>
         </form>
         {error && <p className="error">{error}</p>}
       </div>

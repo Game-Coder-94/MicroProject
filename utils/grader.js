@@ -18,7 +18,7 @@ function calculateGrades(students) {
     // 2. Assign Grade PER SUBJECT & Calculate Avg Z
     return students.map(student => {
         const subjectGrades = {}; 
-        let totalZ = 0; // Accumulator for average
+        let totalZ = 0;
 
         subjects.forEach(subject => {
             const rawScore = student.scores[subject];
