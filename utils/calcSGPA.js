@@ -1,28 +1,21 @@
-function getGradeDetails(z) {
-    if (z >= 1.5) return { point: 10.0, letter: 'A+' };     // Outstanding
-    if (z >= 1.0) return { point: 9.0,  letter: 'A' };      // Excellent
-    if (z >= 0.5) return { point: 8.0,  letter: 'B' };      // Very Good
-    if (z >= -0.5) return { point: 7.0,  letter: 'C' };     // Good
-    if (z >= -1.0) return { point: 6.0,  letter: 'D' };     // Above Average
-    if (z >= -1.5) return { point: 5.0,  letter: 'E' };     // Average
-    return { point: 0.0, letter: 'F' };                     // Fail
-}
+const { getGradeDetails } = require('./gradeScale.js');
 
-function calculateResults (courses, sigp = 0) {
+function calculateSGPA (results, sigp = 0) {
+    return results.map(student => {
     let sumCiPi = 0;
     let sumCi = 0;
 
-    const reportCard = courses.map(course => {
-        const Ci = parseFloat(course.Credit);
-        const z = parseFloat(course.zScore);
-
+    const reportCard = Object.keys(student.course.courseGrades).map(course => {
+        const Ci = parseFloat(student.course.courseCredits[course]);
+        const z = parseFloat(student.course.courseZScores[course]);
+        
         if (isNaN(Ci) || isNaN(z)) {
             throw new Error(`Invalid data for subject: ${course.Subject}`);
         }
         
         const grade = getGradeDetails(z);
         const Pi = grade.point;
-
+        
         sumCiPi += (Ci * Pi);
         sumCi += Ci;
 
@@ -43,6 +36,7 @@ function calculateResults (courses, sigp = 0) {
     const finalSGPA = numerator / sumCi;     // SGPA calculation
 
     return {
+        name: student.name,
         summary: {
             sgpa: finalSGPA.toFixed(2),
             total_credits: sumCi,
@@ -50,7 +44,8 @@ function calculateResults (courses, sigp = 0) {
         },
         individual_grades: reportCard
     };
+    });
 }
 
 // Export as object
-module.exports = { calculateResults };
+module.exports = { calculateSGPA };

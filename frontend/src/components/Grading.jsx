@@ -8,8 +8,14 @@ function Grading() {
   const [sigpState, setSigpState] = useState('');
   const [error, setError] = useState('');
 
-  const handleFileChange = (e) => {
+  const handleScoresChange = (e) => {
     setScoresFile(e.target.files[0]);
+    setError('');
+    setResults([]);
+  };
+
+  const handleCreditsChange = (e) => {
+    setCreditsFile(e.target.files[0]);
     setError('');
     setResults([]);
   };
@@ -26,8 +32,8 @@ function Grading() {
     }
 
     const formData = new FormData();
-    formData.append('csvFile', scoresFile);
-    formData.append('creditsFile', creditsFile);
+    formData.append('csvMarksFile', scoresFile);
+    formData.append('csvCreditsFile', creditsFile);
     formData.append('sigp', sigpState);
 
     try {
@@ -53,26 +59,26 @@ function Grading() {
     return `grade-${grade}`; // Falls back to grade-A, grade-B, etc.
   };
 
-  const getSubjects = () => {
+  const getCourses = () => {
     if (results.length === 0) return [];
-    return Object.keys(results[0].subjectGrades);
+    return Object.keys(results[0].courseGrades);
   };
 
-  const subjects = getSubjects();
+  const courses = getCourses();
 
   return (
     <div className="container">
-      <h1>Student Subject Grader</h1>
+      <h1>Student Course Grader</h1>
 
       <div className="card">
         <form onSubmit={handleUpload}>
           <div className='input-flex'>
             <div className='input-row'>
               <label>Scores File:</label>
-              <input type="file" accept=".csv" onChange={handleFileChange} />
+              <input type="file" accept=".csv" onChange={handleScoresChange} />
               <label>Credits File:</label>
-              <input type="file" accept=".csv" onChange={handleFileChange} />
-              <button type="submit" disabled={!scoresFile}>Calculate Grades</button>
+              <input type="file" accept=".csv" onChange={handleCreditsChange} />
+              <button type="submit" disabled={!scoresFile || !creditsFile}>Calculate Grades</button>
             </div>
             
               <div className='input-row'>
@@ -86,7 +92,7 @@ function Grading() {
 
       {results.length > 0 && (
         <div className="results-area">
-          <h2>Detailed Subject Report</h2>
+          <h2>Detailed Course Report</h2>
           <table>
             <thead>
               <tr>
@@ -97,7 +103,7 @@ function Grading() {
                 <th style={{ backgroundColor: '#6c757d' }}>Avg Z-Score</th>
                 
                 {/* 3. Dynamic Subject Columns */}
-                {subjects.map((subject) => (
+                {courses.map((subject) => (
                   <th key={subject}>{subject}</th>
                 ))}
               </tr>
@@ -113,10 +119,10 @@ function Grading() {
                   </td>
                   
                   {/* Display Grades for each subject */}
-                  {subjects.map((subject) => (
+                  {courses.map((subject) => (
                     <td key={subject}>
-                      <span className={`grade-badge ${getGradeClass(student.subjectGrades[subject])}`}>
-                        {student.subjectGrades[subject]}
+                      <span className={`grade-badge ${getGradeClass(student.courseGrades[subject])}`}>
+                        {student.courseGrades[subject]}
                       </span>
                     </td>
                   ))}

@@ -7,12 +7,17 @@ const cors = require('cors');
 // Import utilities
 const { calculateGrades } = require('./utils/grader');
 const { calculateSGPA } = require('./utils/calcSGPA');
-const { parseCSV } = require('./utils/parser');
+const { parseAndMerge } = require('./utils/parser');
 const { error } = require('console');
 
 // Create app (Server) instance
 const app = express();
 const upload = multer({ dest: 'uploads/' });    // Temp storage
+
+const uploadFields = upload.fields([
+    { name: 'csvMarksFile', maxCount: 1 },
+    { name: 'csvCreditsFile', maxCount: 1 }
+]);
 
 // Middleware
 app.use(cors());
@@ -28,32 +33,56 @@ app.get('/hello', (req, res) => {
 })
 
 // Calaculate grades
-app.post('/grades', upload.single('csvFile'), (req, res) => {
+app.post('/grades', uploadFields, (req, res) => {
     try {
-        if(!req.file) {
-            return res.status(400).json({ error: "No file uploaded" });
+        if (!req.files || !req.files['csvMarksFile'] || !req.files['csvCreditsFile']) {
+            return res.status(400).json({ error: "Both Scores and Credits files are required." });
         }
 
-        // 1. Get data in csv format
-        const csvMarksText = fs.readFileSync(req.file.path, 'utf8');
-        const csvCreditsText = fs.readFileSync(req.file.path, 'utf8');
+        // 1. Read uploaded files
         const sigp = req.body.sigp ? parseFloat(req.body.sigp) : 0;
+        const csvMarksText = fs.readFileSync(req.files['csvMarksFile'][0].path, 'utf8');
+        const csvCreditsText = fs.readFileSync(req.files['csvCreditsFile'][0].path, 'utf8');
 
-        // 2. Convert data
-        const studentsData = parseCSV(csvMarksText);
+        // 2. Convert data        
+        const studentsData = parseAndMerge(csvMarksText, csvCreditsText);   // {name, marks: {}, credits: {}}
+        console.log("Parsed data:", studentsData);
 
         // 3. Process data
+        // Array of {name, course: {courseCredits: {}, courseGrades: {}, courseZScores: {}}, avgZScore}
         const results = calculateGrades(studentsData);
+        console.log("Calculated Grades:", results);
+        // Array of {summary: {sgpa, total_credits, sigp}, individual_grades: []}
+        const sgpaResults = calculateSGPA(results, sigp);
+        console.log("Calculated SGPA:", sgpaResults);
 
         // 4. Cleanup
-        fs.unlinkSync(req.file.path);
-        
-        // 4. Send results to frontend
-        res.json({ success: true, results: results });
+        fs.unlinkSync(req.files['csvMarksFile'][0].path);
+        fs.unlinkSync(req.files['csvCreditsFile'][0].path);
+
+        // 5. Flatten results for frontend
+        const flatResults = results.map(student => ({
+            name: student.name,
+            courseCredits: student.course.courseCredits,
+            courseGrades: student.course.courseGrades,
+            courseZScores: student.course.courseZScores,
+            avgZScore: student.avgZScore
+        }));
+
+        // 6. Send results to frontend
+        res.json({ success: true, results: flatResults, sgpa: sgpaResults });
 
     } catch (err) {
+        // Log error
         console.error(err);
-        if (req.file) fs.unlinkSync(req.file.path);
+
+        // Clean up files if error occurs
+        if (req.files) {
+            if (req.files['csvMarksFile']) try { fs.unlinkSync(req.files['csvMarksFile'][0].path); } catch (e) {}
+            if (req.files['csvCreditsFile']) try { fs.unlinkSync(req.files['csvCreditsFile'][0].path); } catch (e) {}
+        }
+
+        // Send error response
         res.status(500).json({ success: false, error: err.message });
     }
 });
@@ -74,19 +103,19 @@ app.post('/grades', upload.single('csvFile'), (req, res) => {
 
 //         // 3. Parse CSV into an array of objects
 //         // Expected CSV format: Subject, Credit, GradePoint
-//         const semesterData = parseCSV(csvMarksText);
+//         const semesterData = parseAndMerge(csvMarksText);
 
 //         // 4. Calculate SGPA using the formula
-//         const results = calculateSGPA(semesterData, sigp);
+//         const grades = calculateSGPA(semesterData, sigp);
 
 //         // 5. Cleanup (Delete temp file)
 //         fs.unlinkSync(req.file.path);
         
-//         // 6. Send results
+//         // 6. Send grades
 //         res.json({ 
 //             success: true, 
 //             sigp_applied: sigp,
-//             results: results 
+//             grades: grades 
 //         });
 
 //     } catch (err) {
