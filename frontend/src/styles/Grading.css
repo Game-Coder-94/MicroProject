@@ -1,18 +1,225 @@
+:root {
+  --bg: #ffffff;
+  --panel: #f7f7f7;
+  --accent: #000000;
+  --muted: #777777;
+  --glass: rgba(0, 0, 0, 0.04);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial;
+  background: var(--bg);
+  color: var(--accent);
+}
+
+.grading-app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.topbar {
+  background: var(--accent);
+  color: var(--bg);
+  padding: 18px 28px;
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: 0.2px;
+}
+
+.main {
+  display: flex;
+  flex: 1;
+  gap: 28px;
+  padding: 28px;
+  align-items: flex-start;
+}
+
+.sidebar {
+  width: 300px;
+}
+
+.upload-card {
+  background: var(--panel);
+  border-radius: 8px;
+  padding: 18px;
+  box-shadow: 0 1px 0 var(--glass);
+}
+
+.upload-card h3 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+}
+
+.file-label {
+  display: block;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.file-input {
+  width: 100%;
+  margin-top: 6px;
+  background: transparent;
+}
+
+.text-input {
+  width: 100%;
+  margin-top: 6px;
+  padding: 8px;
+  border: 1px solid #e6e6e6;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.primary-btn {
+  margin-top: 12px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.primary-btn[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.error {
+  margin-top: 10px;
+  color: #8b0000;
+  font-size: 13px;
+}
+
+.note {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 18px;
+  box-shadow: 0 1px 0 var(--glass);
+  min-height: 300px;
+}
+
+.placeholder {
+  padding: 40px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.table-wrap {
+  overflow: auto;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.results-table thead th {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  border-bottom: 1px solid #e9e9e9;
+  padding: 12px;
+  text-align: left;
+}
+
+.results-table tbody td {
+  padding: 12px;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.name-cell {
+  font-weight: 600;
+}
+
+.zcell {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.grade-badge {
+  display: inline-block;
+  padding: 6px 9px;
+  border-radius: 6px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.grade-A-plus { background: #000; }
+.grade-A { background: #111; }
+.grade-B { background: #444; }
+.grade-C { background: #666; }
+.grade-D { background: #888; }
+.grade-E { background: #aaa; }
+.grade-F { background: #ddd; color: #000; }
+.grade-unknown { background: #eaeaea; color: #000; }
+
+.footer {
+  padding: 12px 20px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  border-top: 1px solid #f2f2f2;
+}
+
+@media (max-width: 900px) {
+  .main {
+    flex-direction: column;
+    padding: 18px;
+  }
+  .sidebar {
+    width: 100%;
+  }
+}
 .container {
   max-width: 800px;
   margin: 2rem auto;
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   padding: 0 1rem;
   text-align: center;
   color: #030415;
- 
 }
 
 .card {
   background: #f8f9fa;
   padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 2rem;
 }
 
@@ -53,7 +260,8 @@ table {
   margin-top: 1rem;
 }
 
-th, td {
+th,
+td {
   padding: 12px;
   text-align: left;
   border-bottom: 1px solid #ddd;
@@ -70,20 +278,40 @@ th {
 }
 
 /* Grade Colors */
-.grade-badge { padding: 4px 8px; border-radius: 12px; font-weight: bold; font-size: 0.9em; }
-.grade-A { background: #d4edda; color: #155724; }
-.grade-B { background: #cce5ff; color: #004085; }
-.grade-C { background: #fff3cd; color: #856404; }
-.grade-D { background: #ffeeba; color: #856404; }
-.grade-F { background: #f8d7da; color: #721c24; }
-
-.grade-A-plus { 
-    background: #c3e6cb; 
-    color: #0f5132; 
-    border: 1px solid #155724;
+.grade-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+.grade-A {
+  background: #d4edda;
+  color: #155724;
+}
+.grade-B {
+  background: #cce5ff;
+  color: #004085;
+}
+.grade-C {
+  background: #fff3cd;
+  color: #856404;
+}
+.grade-D {
+  background: #ffeeba;
+  color: #856404;
+}
+.grade-F {
+  background: #f8d7da;
+  color: #721c24;
 }
 
-.grade-E { 
-    background: #ffdfba; 
-    color: #a35200; 
+.grade-A-plus {
+  background: #c3e6cb;
+  color: #0f5132;
+  border: 1px solid #155724;
+}
+
+.grade-E {
+  background: #ffdfba;
+  color: #a35200;
 }
