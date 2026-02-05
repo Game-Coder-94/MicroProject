@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import Header from './Header.jsx';
 import '../styles/Grading.css';
+import Sidebar from './Sidebar.jsx';
 
 function Grading() {
   const [scoresFile, setScoresFile] = useState(null);
@@ -63,29 +65,19 @@ function Grading() {
 
   return (
     <div className="grading-app">
-      <header className="topbar">Student Course Report</header>
+      <Header />
 
       <div className="main">
-        <aside className="sidebar">
-          <div className="upload-card">
-            <h3>Upload Files</h3>
-            <form onSubmit={handleUpload}>
-              <label className="file-label">Scores (.csv)</label>
-              <input className="file-input" type="file" accept=".csv" onChange={handleScoresChange} />
-
-              <label className="file-label">Credits (.csv)</label>
-              <input className="file-input" type="file" accept=".csv" onChange={handleCreditsChange} />
-
-              <label className="file-label">Optional SIGP</label>
-              <input className="text-input" type="text" placeholder="SIGP (optional)" value={sigpState} onChange={(e) => setSigpState(e.target.value)} />
-
-              <button className="primary-btn" type="submit" disabled={!scoresFile || !creditsFile}>Calculate Grades</button>
-            </form>
-
-            {error && <div className="error">{error}</div>}
-            <div className="note">Minimalist black & white theme</div>
-          </div>
-        </aside>
+        <Sidebar
+          scoresFile={scoresFile}
+          creditsFile={creditsFile}
+          onScoresChange={handleScoresChange}
+          onCreditsChange={handleCreditsChange}
+          sigp={sigpState}
+          setSigp={setSigpState}
+          onUpload={handleUpload}
+          error={error}
+        />
 
         <section className="content">
           <div className="content-card">
@@ -97,7 +89,7 @@ function Grading() {
                   <thead>
                     <tr>
                       <th>Student Name</th>
-                      <th>Avg Z-Score</th>
+                      <th>SGPA</th>
                       {courses.map((subject) => (
                         <th key={subject}>{subject}</th>
                       ))}
@@ -107,11 +99,11 @@ function Grading() {
                     {results.map((student, idx) => (
                       <tr key={idx}>
                         <td className="name-cell">{student.name}</td>
-                        <td className="zcell">{student.avgZScore}</td>
+                        <td className="zcell">{student.summary?.sgpa ?? '-'}</td>
                         {courses.map((subject) => (
                           <td key={subject}>
-                            <span className={`grade-badge ${getGradeClass(student.courseGrades[subject])}`}>
-                              {student.courseGrades[subject]}
+                            <span className={`grade-badge ${getGradeClass(student.courseGrades?.[subject])}`}>
+                              {student.courseGrades?.[subject] ?? '-'}
                             </span>
                           </td>
                         ))}
@@ -125,7 +117,7 @@ function Grading() {
         </section>
       </div>
 
-      <footer className="footer">copyright Devashish and Team</footer>
+      <footer className="footer">copyright Team 8</footer>
     </div>
   );
 }

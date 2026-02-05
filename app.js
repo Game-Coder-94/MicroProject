@@ -60,13 +60,15 @@ app.post('/grades', uploadFields, (req, res) => {
         fs.unlinkSync(req.files['csvMarksFile'][0].path);
         fs.unlinkSync(req.files['csvCreditsFile'][0].path);
 
-        // 5. Flatten results for frontend
-        const flatResults = results.map(student => ({
+        // 5. Flatten results for frontend and include SGPA summary
+        const flatResults = results.map((student, idx) => ({
             name: student.name,
             courseCredits: student.course.courseCredits,
             courseGrades: student.course.courseGrades,
             courseZScores: student.course.courseZScores,
-            avgZScore: student.avgZScore
+            avgZScore: student.avgZScore,
+            summary: sgpaResults?.[idx]?.summary ?? null,
+            individual_grades: sgpaResults?.[idx]?.individual_grades ?? []
         }));
 
         // 6. Send results to frontend
