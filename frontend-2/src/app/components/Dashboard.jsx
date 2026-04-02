@@ -5,6 +5,7 @@ import SemesterOverview from './SemesterOverview';
 import ClassesTable from './ClassesTable';
 import ClassByWeightChart from './ClassByWeightChart';
 import GradeOverviewChart from './GradeOverviewChart';
+import NormalCurveChart from './NormalCurveChart';
 import UploadPanel from './UploadPanel';
 import { postGrades } from './api';
 import { mapResultsToAggregates } from '../utils/dataMappers';
@@ -146,12 +147,7 @@ export default function Dashboard() {
             </div>
 
             {/* Top Row: Semester Header + GPA Overview + Semester Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <SemesterHeader
-                semesterName="Fall Semester"
-                year={year}
-                onChangeYear={setYear}
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">              
               <GPAOverview data={aggregates.classSummary} />
               <SemesterOverview data={aggregates.semesterOverview} />
             </div>
@@ -166,6 +162,11 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <ClassByWeightChart data={aggregates.classByWeight} />
               <GradeOverviewChart data={aggregates.gradeDistribution} />
+            </div>
+
+            {/* Bell curve chart */}
+            <div className="mt-6">
+              <NormalCurveChart data={aggregates.normalCurveData} />
             </div>
           </div>
         ) : null}

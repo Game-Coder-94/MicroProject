@@ -50,7 +50,7 @@ export default function ClassByWeightChart({ data }) {
         className="text-lg mb-4 uppercase tracking-wide"
         style={{ color: 'var(--gpa-accent)' }}
       >
-        Class by Weight
+        A Grade Count by Course
       </h3>
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>

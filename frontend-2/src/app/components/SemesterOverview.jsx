@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function SemesterOverview({ data }) {
   const rows = [
-    { label: 'Total Classes', value: data?.totalClasses || '0' },
+    { label: 'Total Courses', value: data?.totalClasses || '0' },
     { label: 'Total Credits', value: data?.totalCredits || '0' },
     { label: 'Total GPA Points', value: data?.totalGpaPoints || '0.00' },
   ];

@@ -4,7 +4,63 @@ A pixel-accurate React dashboard for calculating and tracking relative grading r
 
 ![GPA Dashboard](https://via.placeholder.com/1200x600/6aa78e/ffffff?text=GPA+Dashboard)
 
+## Project Structure
+
+- `src/main.tsx` — Application entrypoint
+- `src/app/App.tsx` — Layout wrapper and page shell
+- `src/app/components/` — Reusable UI components
+  - `Dashboard.jsx` — Main logic and data orchestration
+  - `UploadPanel.jsx` — CSV + SIGP input
+  - `GPAOverview.jsx`, `SemesterOverview.jsx` — KPI cards
+  - `ClassesTable.jsx` — Per-course table
+  - `ClassByWeightChart.jsx` — Donut chart (Recharts)
+  - `GradeOverviewChart.jsx` — Grade bar chart
+  - `NormalCurveChart.jsx` — New normal curve chart
+  - `ThemeProvider.jsx` — Theme-state provider
+- `src/app/utils/` — Data mapper and formatter helpers
+  - `dataMappers.js` — API response aggregation
+  - `formatters.js` — grade and number utilities
+  - `getGradeClass.js` — grade CSS class mapping
+- `src/app/components/api.js` — API POST wrapper
+
+## Tech Stack
+
+- React 18
+- Vite 5
+- Tailwind CSS 4
+- Recharts 2
+- Lucide React for icons
+- CSS variables for theming
+- Express / Node backend (in parent project)
+
 ## Features
+
+- CSV upload for marks + credits
+- Optional SIGP adjustment
+- Automatic grade assignment using Z-score
+- Per-course & per-class aggregates
+- GPA summary cards
+- Grade distribution bar chart
+- Class-by-weight donut chart
+- Normal distribution bell curve chart (new)
+- Theme switching + responsive design
+- Error handling and loading state
+
+## Installation & Setup
+
+```bash
+# Install dependencies (if not already installed)
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+```
+
+## Usage
+
 
 - **CSV Upload System** — Upload scores and credits CSV files with optional SIGP adjustment
 - **Real-time Grade Calculation** — POST data to backend and display comprehensive results
@@ -164,13 +220,8 @@ The default grade-to-point conversion:
 |-------|--------|
 | A+    | 10.0   |
 | A     | 9.0    |
-| A-    | 8.5    |
-| B+    | 8.0    |
 | B     | 7.0    |
-| B-    | 6.5    |
-| C+    | 6.0    |
 | C     | 5.0    |
-| C-    | 4.5    |
 | D     | 4.0    |
 | F     | 0.0    |
 
@@ -182,15 +233,15 @@ The dashboard follows the layout from the reference image:
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│                    Header (Title)                    │
-│              + Theme Switcher (top-right)            │
+│                    Header (Title)                   │
+│              + Theme Switcher (top-right)           │
 ├─────────────────────────────────────────────────────┤
-│                   Upload Panel                       │
+│                   Upload Panel                      │
 ├──────────────┬──────────────┬──────────────────────┤
 │   Semester   │  GPA         │  Semester            │
 │   Header     │  Overview    │  Overview            │
 ├──────────────┴──────────────┴──────────────────────┤
-│              Classes Table (wide)                    │
+│              Classes Table (wide)                   │
 ├──────────────────────────┬──────────────────────────┤
 │  Class by Weight         │  Grade Overview          │
 │  (Donut Chart)           │  (Bar Chart)             │

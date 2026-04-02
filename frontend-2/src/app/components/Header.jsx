@@ -32,7 +32,7 @@ export default function Header() {
         className="text-sm uppercase tracking-wider mt-2"
         style={{ color: 'var(--gpa-text)', opacity: 0.6 }}
       >
-        Google Sheets • Instant Download • Automated
+        CSV files • Graph visualiser • Automated
       </p>
     </header>
   );
