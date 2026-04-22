@@ -28,7 +28,7 @@ function parseAndMerge(scoresCSVText, creditsCSVText) {
 
         // Find matching row in Credits data
         const creditRow = creditsData.find(c => c.Name === studentName);
-
+``
         if (!creditRow) {
             console.warn(`Missing credits for student: ${studentName}`);
             return null; // Skip if no match found

@@ -4,8 +4,8 @@ export default function GPAOverview({ data }) {
   const rows = [
     { label: 'Starting GPA', value: data?.startingGPA?.toFixed(2) || '0.00' },
     { label: 'Total College Credits', value: data?.totalCollegeCredits || '0' },
-    { label: 'Semester GPA', value: data?.semesterGPA || '0.00' },
-    { label: 'Cumulative GPA', value: data?.cumulativeGPA || '0.00' },
+    { label: 'Class Average Semester GPA', value: data?.semesterGPA || '0.00' },
+    { label: 'Class Average Cumulative GPA', value: data?.cumulativeGPA || '0.00' },
   ];
 
   return (
